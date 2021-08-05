@@ -1,14 +1,13 @@
 //
 //  AppDelegate.swift
-//  demoSwiftUIApp
+//  LoginWithSwiftUI
 //
-//  Created by Devubha Manek on 30/04/20.
-//  Copyright © 2020 Devubha Manek. All rights reserved.
+//  Created by Devubha Manek on 05/08/21.
 //
 
 import UIKit
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 

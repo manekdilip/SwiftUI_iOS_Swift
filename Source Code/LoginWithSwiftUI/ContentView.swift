@@ -15,11 +15,13 @@ let DarkPinkColor = Color(red: 212.0/255.0, green: 114.0/255.0, blue: 140.0/255.
 
 struct ContentView : View {
     
-    @State var username: String = ""
+    @State var email: String = ""
     @State var password: String = ""
-    
+    init() {
+          UIScrollView.appearance().bounces = false
+       }
     var body: some View {
-        
+        ScrollView {
         VStack() {
             HStack {
                 Spacer()
@@ -27,7 +29,7 @@ struct ContentView : View {
             WelcomeText()
             UserImage()
             
-            TextField("Username", text: $username)
+            TextField("Email", text: $email)
                 .padding()
                 .background(lightGreyColor)
                 .cornerRadius(5.0)
@@ -47,14 +49,85 @@ struct ContentView : View {
             
             Button(action: {
                 print("Log in Button tapped")
+                if isValidate() {
+                    alert(text: "Login successfully")
+                }
             }) {
                 LoginButtonContent()
             }
             Spacer()
         }
+        }
         .padding()
         .background(lightBlueColor)
-     
+        .edgesIgnoringSafeArea(.all)
+    }
+    func isValidate() -> Bool {
+        if !self.email.isEmpty {
+            
+        }else {
+            alert(text: "Please enter email")
+            return false
+        }
+        if self.email.isValidEmail {
+            
+        }else {
+            alert(text: "Please enter valid email")
+            return false
+        }
+        if !self.password.isEmpty {
+            
+        }else {
+            alert(text: "Please enter password")
+            return false
+        }
+        if self.password.isValidPassword {
+            
+        }else {
+            alert(text: "Password should be atleast 6 character and contain 1 capital,numaric and spacial character")
+            return false
+        }
+        return true
+    }
+    private func alert(text:String) {
+        let alert = UIAlertController(title: "Alert", message: text, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in })
+        showAlert(alert: alert)
+    }
+    func showAlert(alert: UIAlertController) {
+        if let controller = topMostViewController() {
+            controller.present(alert, animated: true)
+        }
+    }
+    private func keyWindow() -> UIWindow? {
+        return UIApplication.shared.connectedScenes
+        .filter {$0.activationState == .foregroundActive}
+        .compactMap {$0 as? UIWindowScene}
+        .first?.windows.filter {$0.isKeyWindow}.first
+    }
+
+    private func topMostViewController() -> UIViewController? {
+        guard let rootController = keyWindow()?.rootViewController else {
+            return nil
+        }
+        return topMostViewController(for: rootController)
+    }
+
+    private func topMostViewController(for controller: UIViewController) -> UIViewController {
+        if let presentedController = controller.presentedViewController {
+            return topMostViewController(for: presentedController)
+        } else if let navigationController = controller as? UINavigationController {
+            guard let topController = navigationController.topViewController else {
+                return navigationController
+            }
+            return topMostViewController(for: topController)
+        } else if let tabController = controller as? UITabBarController {
+            guard let topController = tabController.selectedViewController else {
+                return tabController
+            }
+            return topMostViewController(for: topController)
+        }
+        return controller
     }
 }
 
